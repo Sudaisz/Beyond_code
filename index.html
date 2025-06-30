@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BEYOND CODE</title>
+  <meta name="description" content="Run JavaScript like VS Code – Powered by Beyond" />
+  <meta property="og:title" content="BEYOND CODE - Online JS Editor" />
+  <meta property="og:description" content="Run your JavaScript in a VS Code style environment." />
+  <meta property="og:image" content="https://files.catbox.moe/zfdgch.jpg" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="icon.png" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Consolas', monospace;
+      background: #1e1e1e;
+      color: #fff;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-box {
+      background: #252526;
+      padding: 25px;
+      border-radius: 8px;
+      width: 320px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      text-align: center;
+      color: #ffffffcc;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 5px;
+      font-family: inherit;
+    }
+
+    input {
+      background: #1e1e1e;
+      color: white;
+    }
+
+    button {
+      background: #007acc;
+      color: white;
+      cursor: pointer;
+    }
+
+    #vscode-area {
+      display: none;
+      height: 100vh;
+      flex-direction: row;
+    }
+
+    .sidebar {
+      width: 50px;
+      background: #333;
+      padding: 10px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .explorer {
+      width: 250px;
+      background: #252526;
+      padding: 10px;
+    }
+
+    .editor {
+      flex: 1;
+      background: #1e1e1e;
+      padding: 10px;
+      color: #9cdcfe;
+      outline: none;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: #333;
+    }
+
+    .controls button {
+      width: 48%;
+      font-size: 14px;
+    }
+
+    .output {
+      background: #111;
+      color: #0f0;
+      padding: 10px;
+      height: 120px;
+      overflow-y: auto;
+      font-size: 13px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="auth">
+    <div class="form-box">
+      <h2>BEYOND CODE</h2>
+      <input type="text" id="username" placeholder="Username" />
+      <input type="password" id="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <hr />
+      <input type="text" id="newuser" placeholder="New Username" />
+      <input type="password" id="newpass" placeholder="New Password" />
+      <button onclick="signup()">Sign Up</button>
+    </div>
+  </div>
+
+  <div id="vscode-area">
+    <div class="sidebar">
+      <p>☰</p>
+      <button onclick="logout()" style="background:#ff3333; color:white; border:none; padding:5px; font-size:12px; border-radius:5px;">Logout</button>
+    </div>
+    <div class="explorer">
+      <p>EXPLORER</p>
+      <p>› myfile.js</p>
+      <div class="controls">
+        <button onclick="runCode()">▶ Run</button>
+      </div>
+      <div class="output" id="output">
+        // Output will appear here
+      </div>
+    </div>
+    <div class="editor" id="editor" contenteditable="true">
+// Welcome to BEYOND CODE
+console.log("Hello, Beyond!");
+    </div>
+  </div>
+
+  <script>
+    const users = {}; // Temporary memory users
+
+    function login() {
+      let user = document.getElementById("username").value.trim();
+      let pass = document.getElementById("password").value;
+      if (users[user] === pass) {
+        showEditor();
+      } else {
+        alert("Invalid credentials");
+      }
+    }
+
+    function signup() {
+      let user = document.getElementById("newuser").value.trim();
+      let pass = document.getElementById("newpass").value;
+      if (!user || !pass) return alert("Fill both fields");
+      users[user] = pass;
+      alert("Signup successful! Now login.");
+    }
+
+    function showEditor() {
+      document.getElementById("auth").style.display = "none";
+      document.getElementById("vscode-area").style.display = "flex";
+    }
+
+    function logout() {
+      document.getElementById("vscode-area").style.display = "none";
+      document.getElementById("auth").style.display = "flex";
+    }
+
+    function runCode() {
+      const code = document.getElementById("editor").innerText;
+      const outputDiv = document.getElementById("output");
+      try {
+        const result = eval(code);
+        outputDiv.innerText = result !== undefined ? result : "// Executed with no output.";
+      } catch (e) {
+        outputDiv.innerText = "❌ Error: " + e.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
